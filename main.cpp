@@ -7,14 +7,14 @@ using namespace std;
 
 constexpr int scale=15;
 
-#include "decl.h"
+#include "decl.hpp"
 
-#include "fighter.h"
-#include "missile.h"
-#include "shooter.h"
-#include "enemy.h"
-#include "player.h"
-#include "fighters.h"
+#include "fighter.hpp"
+#include "missile.hpp"
+#include "shooter.hpp"
+#include "enemy.hpp"
+#include "player.hpp"
+#include "fighters.hpp"
 
 int main()
 {
