@@ -70,6 +70,12 @@ int io_dialog(const char *message, const char *options)
     return selected >= 0 && selected < options_len ? selected : 0;
 }
 
+bool io_loop(void)
+{
+    SDL_Delay(50);
+    return !SDL_QuitRequested();
+}
+
 void io_message(const char *message)
 {
     SDL_ShowSimpleMessageBox(0, message, message, 0);

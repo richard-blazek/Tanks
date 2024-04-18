@@ -7,6 +7,7 @@ void io_init(int w, int h);
 void io_quit(void);
 int io_dialog(const char *message, const char *options);
 void io_message(const char *message);
+bool io_loop(void);
 
 bool io_click(void);
 void io_mouse_position(int *x, int *y);

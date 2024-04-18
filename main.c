@@ -6,7 +6,6 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include <SDL2/SDL.h>
 
 int main()
 {
@@ -25,7 +24,7 @@ int main()
 	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
 	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
 
-	while(!SDL_QuitRequested())
+	while(io_loop())
 	{
 		io_draw_clear();
 		fighters_play(player);
@@ -69,7 +68,6 @@ int main()
 		{
 			fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
 		}
-		SDL_Delay(50);
 	}
 
 	io_quit();
