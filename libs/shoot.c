@@ -18,7 +18,8 @@ static fighter *add_shot(fighter *parent)
     shot->role = MISSILE;
     shot->level = 0;
     shot->xp = 0;
-    shot->shot_health = shot->max_health = shot->health = parent->shot_health;
+    shot->shot_damage = shot->damage = parent->shot_damage;
+    shot->max_health = shot->health = 10;
     shot->shot_speed = shot->speed = parent->shot_speed;
     shot->shooting_callback = shoot_none;
     shot->shooting_interval = shot->shooting_timeout = parent->shooting_interval;
@@ -75,5 +76,5 @@ void shoot_swarm(fighter *parent)
     fighter *shot = add_shot(parent);
     shot->role = SHOOTER;
     shot->shooting_callback = shoot_navigated;
-    shot->shot_speed *= 1.25;
+    shot->shot_speed *= 2;
 }

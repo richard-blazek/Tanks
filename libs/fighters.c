@@ -76,8 +76,8 @@ void fighters_free(fighter *player)
     }
 }
 
-fighter *fighters_spawn_player(float x, float y, int w, int h, float speed, float shot_speed, int max_health,
-                               int shot_health, int shooting_interval, shooting_callback shooting_callback)
+fighter *fighters_spawn_player(float x, float y, int w, int h, float speed, float shot_speed, int max_health, int damage,
+                               int shot_damage, int shooting_interval, shooting_callback shooting_callback)
 {
     fighter *player = malloc(sizeof(fighter));
     player->x = x;
@@ -89,7 +89,8 @@ fighter *fighters_spawn_player(float x, float y, int w, int h, float speed, floa
     player->shot_speed = shot_speed;
     player->xp = 0.0f;
     player->health = player->max_health = max_health;
-    player->shot_health = shot_health;
+    player->damage = damage;
+    player->shot_damage = shot_damage;
     player->level = 1;
     player->shooting_timeout = player->shooting_interval = shooting_interval;
     player->shooting_callback = shooting_callback;
@@ -99,17 +100,18 @@ fighter *fighters_spawn_player(float x, float y, int w, int h, float speed, floa
     return player;
 }
 
-void fighters_spawn_stone(fighter *player, float x, float y, int w, int h, int max_health)
+void fighters_spawn_stone(fighter *player, float x, float y, int w, int h, float xp, int max_health, int damage)
 {
     fighter *s = malloc(sizeof(fighter));
     s->x = x;
     s->y = y;
     s->shot_speed = s->speed = s->dx = s->dy = 0.0f;
-    s->xp = max_health;
+    s->xp = xp;
     s->w = w;
     s->h = h;
     s->health = s->max_health = max_health;
-    s->shot_health = 0;
+    s->damage = damage;
+    s->shot_damage = 0;
     s->level = 1;
     s->shooting_timeout = s->shooting_interval = 1;
     s->shooting_callback = shoot_none;
@@ -119,8 +121,8 @@ void fighters_spawn_stone(fighter *player, float x, float y, int w, int h, int m
     player->next = s;
 }
 
-void fighters_spawn_enemy(fighter *player, float x, float y, int w, int h, float speed, float shot_speed,
-                          int max_health, int shot_health, int shooting_interval, shooting_callback shooting_callback)
+void fighters_spawn_enemy(fighter *player, float x, float y, int w, int h, float speed, float shot_speed, float xp,
+                          int max_health, int damage, int shot_damage, int shooting_interval, shooting_callback shooting_callback)
 {
     fighter *e = malloc(sizeof(fighter));
     e->x = x;
@@ -130,9 +132,10 @@ void fighters_spawn_enemy(fighter *player, float x, float y, int w, int h, float
     e->h = h;
     e->speed = speed;
     e->shot_speed = shot_speed;
-    e->xp = max_health;
+    e->xp = xp;
     e->health = e->max_health = max_health;
-    e->shot_health = shot_health;
+    e->damage = damage;
+    e->shot_damage = shot_damage;
     e->level = 1;
     e->shooting_timeout = e->shooting_interval = shooting_interval;
     e->shooting_callback = shooting_callback;

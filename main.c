@@ -10,19 +10,19 @@
 int main()
 {
 	srand(time(0));
-	const int w = 1000, h = 640;
+	const int w = 1200, h = 800;
 	io_init(w, h);
 
-	fighter *player = fighters_spawn_player(500, 300, 40, 40, 4, 5, 400, 20, 24, shoot_basic);
+	fighter *player = fighters_spawn_player(w/2, h/2, 40, 40, 2, 10, 400, 10, 20, 10, shoot_basic);
 
-	fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 2, 10, 100, 15, 10, shoot_basic);
-	fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 1, 5, 100, 15, 20, shoot_basic);
-	fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 1, 5, 100, 15, 20, shoot_basic);
-	fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 0.4, 2, 100, 50, 40, shoot_basic);
-	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
-	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
-	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
-	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
+	fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 2, 10, 0.5, 100, 10, 15, 10, shoot_basic);
+	fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 1, 5, 0.8, 100, 10, 15, 20, shoot_basic);
+	fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 1, 5, 0.8, 100, 10, 15, 20, shoot_basic);
+	fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 0.4, 2, 1.5, 100, 10, 50, 40, shoot_basic);
+	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, 0.5, rand() % 80 + 40, 10);
+	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, 0.5, rand() % 80 + 40, 10);
+	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, 0.5, rand() % 80 + 40, 10);
+	fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, 0.5, rand() % 80 + 40, 10);
 
 	while(io_loop())
 	{
@@ -32,7 +32,9 @@ int main()
 		
 		for (fighter *it = player; it; it = it->next)
 		{
-			io_draw_fighter(it->x, it->y, it->w, it->h, it->bloc == ENEMY ? 200 : 32, it->bloc == FRIEND ? 200 : 32, 32, 1.0 * it->health / it->max_health);
+			io_draw_fighter(it->x, it->y, it->w, it->h,
+							it->bloc == ENEMY ? 200 : 32, it->bloc == FRIEND ? 200 : 32, it->role == MISSILE ? 128 : 32,
+							1.0 * it->health / it->max_health);
 		}
 		if (player->role == PLAYER)
 		{
@@ -52,21 +54,15 @@ int main()
 			io_message("Victory - You won");
 			break;
 		}
-		else if ((alive & SYSTEM) == 0)
+		else if (rand() % 100 == 0 || (alive & SYSTEM) == 0)
 		{
-			fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
-			fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
-			fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
-			fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
+			float size = rand() / (float)RAND_MAX + 0.2;
+			fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, size / player->level, size * 100, 10);
 		}
-		if (rand() % (clock() < 60000 ? 500 : 200) == 0)
+		else if (rand() % (clock() < 60000 ? 500 : 100) == 0)
 		{
-			int size = rand() % 3 + player->level;
-			fighters_spawn_enemy(player, rand() % w, rand() % h, 40, 40, 3.0 / size, 2, 100 * size, 50 * size, 50, shoot_basic);
-		}
-		else if (rand() % 200 == 0)
-		{
-			fighters_spawn_stone(player, rand() % w, rand() % h, 20, 20, rand() % 80 + 40);
+			float size = rand() / (float)RAND_MAX + 0.2;
+			fighters_spawn_enemy(player, rand() % w, rand() % h, size * 40, size * 40, 1 / size, 8, size / player->level, 100 * size, 10, 50 * size, 50, shoot_basic);
 		}
 	}
 

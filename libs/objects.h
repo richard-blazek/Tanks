@@ -24,7 +24,7 @@ struct fighter
 {
     float x, y, dx, dy, speed, shot_speed, xp;
     int w, h;
-    int health, max_health, shot_health, level;
+    int health, max_health, damage, shot_damage, level;
     int shooting_interval, shooting_timeout;
     shooting_callback shooting_callback;
     bloc bloc;

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+#include <limits.h>
 
 static bool collide(fighter *f1, fighter *f2)
 {
@@ -56,10 +57,10 @@ static void hit_enemies(fighter *player, fighter *me)
     {
         if (it->bloc != me->bloc && it->health > 0 && collide(it, me))
         {
-            it->health -= 10;
+            it->health -= me->damage;
             if (it->health <= 0 && me->bloc == FRIEND)
             {
-                player->xp += it->xp / 50.0 / (player->level + 1.0);
+                player->xp += it->xp;
             }
         }
     }
@@ -120,24 +121,23 @@ static void level_up(fighter *player)
     player->xp -= 1.0;
     player->level += 1;
 
-    int selected = io_dialog("What do you want to improve?", "Speed +25%|Health +25%|Missile power +25%|Shooting speed +25%");
-    if (selected == 0)
+    int selected = io_dialog("What do you want to improve?", "Speed|Health|Body damage|Missile damage");
+    if (selected == 0 && player->speed < player->w / 2)
     {
         player->speed *= 1.25;
     }
-    else if (selected == 1)
+    else if (selected == 1 && player->max_health < INT_MAX / 4)
     {
         player->max_health += player->max_health / 4;
-        player->health += (player ->max_health + player->health) / 2;
+        player->health += (player->health + player->max_health) / 2;
     }
-    else if (selected == 2)
+    else if (selected == 2 && player->damage < INT_MAX / 4)
     {
-        player->shot_health += player->shot_health / 4;
+        player->damage += player->damage / 4;
     }
-    else if (selected == 3)
+    else if (selected == 3 && player->shot_damage < INT_MAX / 4)
     {
-        player->shooting_interval = player->shooting_interval * 4 / 5;
-        player->shooting_timeout = 0;
+        player->shot_damage += player->shot_damage / 4;
     }
 
     if (player->level == 10)
@@ -152,7 +152,7 @@ static void level_up(fighter *player)
             player->shooting_callback = shoot_2;
         }
     }
-    else if (player->level == 25)
+    else if (player->level == 20)
     {
         if (player->shooting_callback == shoot_2)
         {
@@ -160,7 +160,7 @@ static void level_up(fighter *player)
             if (selected == 0)
             {
                 player->shooting_callback = shoot_big;
-                player->shot_health *= 2;
+                player->shot_damage *= 2;
             }
             else
             {
